@@ -6,15 +6,16 @@ import sys
 pygame.init()
 
 
-width, height = 600, 400
+width, height = 1280, 720
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("n-Step 2-Color Gradient")
+pygame.display.set_caption("n-Step 2-Color Gradieant")
 
 
 start_color = (40,55,65)   #put color here manually
 end_color = (5,5,5)   
 
-steps = 20
+steps = 32
+
 step_r = (end_color[0] - start_color[0]) / (steps - 1)
 step_g = (end_color[1] - start_color[1]) / (steps - 1)
 step_b = (end_color[2] - start_color[2]) / (steps - 1)
