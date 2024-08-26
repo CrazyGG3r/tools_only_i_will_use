@@ -34,7 +34,7 @@ pygame.init()
 
 
 pixel_size = 20 # thebigger the better
-radius = 10 #input radius here .
+radius = 8 #input radius here .
 display_size = (radius * 2 + 1) * pixel_size
 screen = pygame.display.set_mode((display_size, display_size))
 pygame.display.set_caption(f"Pixelated Circle (Radius: {radius})")

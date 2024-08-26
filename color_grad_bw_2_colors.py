@@ -1,59 +1,58 @@
 import pygame
 import sys
 
-#intended for 
-#Pixilart palette import format
 pygame.init()
-
-
 width, height = 1280, 720
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("n-Step 2-Color Gradieant")
+pygame.display.set_caption("n-Step n-Color Gradient")
 
+# Define the colors and steps
+colors = [(255, 244, 116), (240, 101, 83), (56, 28, 42)]  # Add more colors as needed
+steps = 128
 
-start_color = (40,55,65)   #put color here manually
-end_color = (5,5,5)   
+def interpolate_color(color1, color2, t):
+    return tuple(int(a + (b - a) * t) for a, b in zip(color1, color2))
 
-steps = 32
+def generate_gradient(colors, steps):
+    gradient = []
+    segments = len(colors) - 1
+    steps_per_segment = steps // segments
+    remaining_steps = steps % segments
 
-step_r = (end_color[0] - start_color[0]) / (steps - 1)
-step_g = (end_color[1] - start_color[1]) / (steps - 1)
-step_b = (end_color[2] - start_color[2]) / (steps - 1)
+    for i in range(segments):
+        if i !=0:
+            steps_per_segment +=1 
+        start_color = colors[i]
+        end_color = colors[i+1]
+        segment_steps = steps_per_segment + (1 if i < remaining_steps else 0)
+        
+        for step in range(segment_steps):
+            t = step / (segment_steps - 1) if segment_steps > 1 else 1
+            color = interpolate_color(start_color, end_color, t)
+            if len(gradient)>1:
+                if gradient[-1] != color:
+                    gradient.append(color)
+            else:
+                gradient.append(color)
+    
+    return gradient
 
+gradient_colors = generate_gradient(colors, steps)
+hex_colors = [f"{r:02x}{g:02x}{b:02x}" for r, g, b in gradient_colors]
+print(",".join(hex_colors))
+print(f"Number of colors generated: {len(gradient_colors)}")
 
 step_width = width // steps
-
-hex_colors = []
-
-for i in range(steps):
-    r = int(start_color[0] + step_r * i)
-    g = int(start_color[1] + step_g * i)
-    b = int(start_color[2] + step_b * i)
-    hex_color = f"{r:02x}{g:02x}{b:02x}"
-    hex_colors.append(hex_color)
-
-print(",".join(hex_colors))
-
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-
     screen.fill((255, 255, 255))
-
-
-    for i in range(steps):
-        r = int(start_color[0] + step_r * i)
-        g = int(start_color[1] + step_g * i)
-        b = int(start_color[2] + step_b * i)
-        color = (r, g, b)
+    for i, color in enumerate(gradient_colors):
         pygame.draw.rect(screen, color, (i * step_width, 0, step_width, height))
-
-
+    
     pygame.display.flip()
-
 
 pygame.quit()
 sys.exit()
